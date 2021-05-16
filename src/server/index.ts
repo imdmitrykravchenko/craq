@@ -1,6 +1,6 @@
 import '@babel/polyfill';
 import url from 'url';
-import Koa from 'koa';
+import Koa, { Context } from 'koa';
 import { InternalServerError, Route } from 'router6/src';
 
 import actionsMiddleware from '../core/actionsMiddleware';
@@ -18,7 +18,7 @@ const tryCatchMiddleware = async (ctx, next) => {
 };
 
 export const createCraqServer = (
-  createContext: <T>(ctx: T) => ServerContext<any, T>,
+  createContext: <T extends Context>(ctx: T) => ServerContext<any, T>,
   App,
   {
     bundles,

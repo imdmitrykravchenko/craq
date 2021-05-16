@@ -17,7 +17,7 @@ export default ({
   components: Registry<ComponentType>;
   reducers: ReducersMapObject;
   routes: RouteDefinition[];
-}) => (ctx: Context) =>
+}) => <T extends Context>(ctx: T) =>
   new ServerContext({
     ctx,
     store: createStore(combineReducers(reducers)),
