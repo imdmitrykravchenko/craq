@@ -3,6 +3,7 @@ import url from 'url';
 import Koa, { Context } from 'koa';
 import { InternalServerError, Route } from 'router6/src';
 
+import createApp from '../core/createApp';
 import actionsMiddleware from '../core/actionsMiddleware';
 
 import ServerContext from './ServerContext';
@@ -72,7 +73,7 @@ export const createCraqServer = (
       );
       const renderer = renderers[route.config.renderer];
 
-      return renderer(context, App, { bundles, options });
+      return renderer(context, createApp(App), { bundles, options });
     };
 
     try {
