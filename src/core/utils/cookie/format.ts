@@ -1,4 +1,4 @@
-import { CookieSetServicePayload } from '../../services/cookie/types';
+import { SetCookieServicePayload } from '../../services/cookie/types';
 
 const getExpires = (days: number): string => {
   const date = new Date();
@@ -13,7 +13,7 @@ const format = ({
   value,
   path = '/',
   expires,
-}: CookieSetServicePayload): string =>
+}: SetCookieServicePayload): string =>
   [`${name}=${value}`, expires && getExpires(expires), `path=${path}`]
     .filter(Boolean)
     .join(';');

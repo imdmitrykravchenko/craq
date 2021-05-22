@@ -1,9 +1,9 @@
 import { CraqService } from '../../../types';
 import format from '../../../core/utils/cookie/format';
-import { CookieSetServicePayload } from '../../../core/services/cookie/types';
+import { SetCookieServicePayload } from '../../../core/services/cookie/types';
 import ServerContext from '../../ServerContext';
 
-const cookieSetService: CraqService<CookieSetServicePayload> = (
+const setCookieService: CraqService<SetCookieServicePayload> = (
   context: ServerContext<any>,
   payload,
 ) => {
@@ -12,4 +12,4 @@ const cookieSetService: CraqService<CookieSetServicePayload> = (
   return Promise.resolve();
 };
 
-export default cookieSetService;
+export default setCookieService;

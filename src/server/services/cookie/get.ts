@@ -2,12 +2,12 @@ import { CraqService } from '../../../types';
 import parse from '../../../core/utils/cookie/parse';
 import ServerContext from '../../ServerContext';
 
-export type CookieGetServicePayload = {
+export type GetCookieServicePayload = {
   name: string;
   defaultValue?: string | number;
 };
 
-const cookieGetService: CraqService<CookieGetServicePayload> = (
+const getCookieService: CraqService<GetCookieServicePayload> = (
   context: ServerContext<any>,
   { name, defaultValue = null },
 ) => {
@@ -16,4 +16,4 @@ const cookieGetService: CraqService<CookieGetServicePayload> = (
   return Promise.resolve(value === null ? defaultValue : value);
 };
 
-export default cookieGetService;
+export default getCookieService;

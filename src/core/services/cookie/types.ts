@@ -1,5 +1,5 @@
 
-export type CookieSetServicePayload = {
+export type SetCookieServicePayload = {
   path?: string;
   expires?: number; // days
   name: string;
