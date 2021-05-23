@@ -21,7 +21,7 @@
     "react-redux": "^7.2.2",
     "redux": "^4.0.5",
     "redux-act": "^1.8.0",
-    "router6": "git+ssh://git@github.com/imdmitrykravchenko/router6.git#bc1b6a563a297ad8debcb138f6cc7b1a1c34b29f",
+    "router6": "git+ssh://git@github.com/imdmitrykravchenko/router6.git#dd450c339e3c766c111ce30c167df55b60236e71",
     "router6-history": "git@github.com:imdmitrykravchenko/router6-history.git",
     "router6-react": "git@github.com:imdmitrykravchenko/router6-react.git",
     "url": "^0.11.0"
