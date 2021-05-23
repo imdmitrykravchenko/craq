@@ -23,7 +23,7 @@ export const createCraqClient = (context: Context<any>, App, { bundles }) => {
     .use(() => ({ to }, next) => {
       const bundle = bundles[to.config.bundle];
 
-      bundle().then(next);
+      return bundle().then(next);
     })
     .use(historyMiddleware())
     .use(
@@ -32,14 +32,14 @@ export const createCraqClient = (context: Context<any>, App, { bundles }) => {
         {
           executionFlow: (execution, next, abort) => {
             if (context.router.isStarted()) {
-              next();
               execution.catch((e) => {
                 if (isRoutingError(e)) {
                   context.router.error = e;
                 }
               });
+              next();
             } else {
-              execution.then(next, abort);
+              return execution.then(next, abort);
             }
           },
         },

@@ -76,7 +76,7 @@ const actionsMiddleware =
         }),
     );
 
-    executionFlow(execution, next, abort);
+    return executionFlow(execution, next, abort);
   };
 
 export default actionsMiddleware;
