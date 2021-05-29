@@ -49,6 +49,7 @@ export const createCraqServer = (
 
       context.router.use(
         actionsMiddleware(context, {
+          isServer: true,
           handleRoutingError: (e, next, abort) => Promise.reject(abort(e)),
           executionFlow: (execution, next) =>
             execution

@@ -30,6 +30,7 @@ export const createCraqClient = (context: Context<any>, App, { bundles }) => {
       actionsMiddleware(
         context,
         {
+          isServer: false,
           executionFlow: (execution, next, abort) => {
             if (context.router.isStarted()) {
               execution.catch((e) => {

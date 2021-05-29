@@ -7,13 +7,29 @@ type ActionExecutionResult = { [actionName: string]: boolean };
 const compileParam = (param: string, params) =>
   param.replace(/:(\w+)/g, (_, name) => params[name]);
 
+type ActionOptions = { serverOnly?: boolean; clientOnly?: boolean };
+type NormalizedAction = {
+  name: string;
+  params: object;
+  options: ActionOptions;
+};
+
+const normalizeAction = (
+  actionNameOrNormailizedAction: string | NormalizedAction,
+): NormalizedAction =>
+  typeof actionNameOrNormailizedAction === 'string'
+    ? { name: actionNameOrNormailizedAction, params: {}, options: {} }
+    : actionNameOrNormailizedAction;
+
 const actionsMiddleware =
   <T extends Context<any>>(
     context: T,
     {
+      isServer,
       handleRoutingError,
       executionFlow,
     }: {
+      isServer: boolean;
       handleRoutingError?: (e, next, abort) => Promise<any>;
       executionFlow: (
         execution: Promise<ActionExecutionResult[]>,
@@ -28,52 +44,52 @@ const actionsMiddleware =
     const routerStarted = router.isStarted();
     const execution = Promise.all<ActionExecutionResult>(
       (to.config.actions || [])
-        .map((nameWithParams: string) => {
-          const [name, query = ''] = nameWithParams.split('?');
-
-          return {
-            name,
-            params: qs.parse(query),
-          };
-        })
+        .map(normalizeAction)
         .filter(({ name }: { name: string }) => routerStarted || !stats[name])
-        .map(({ name, params }: { name: string; params: object }) => {
-          const action = context.getAction(name);
+        .map(
+          ({
+            name,
+            params,
+            options: { serverOnly, clientOnly },
+          }: NormalizedAction) => {
+            const hasPermissionToExecute = isServer ? !clientOnly : !serverOnly;
+            const action = context.getAction(name);
 
-          if (!action) {
-            return Promise.resolve({ [name]: false });
-          }
+            if (!action || !hasPermissionToExecute) {
+              return Promise.resolve({ [name]: false });
+            }
 
-          return context
-            .action(action, {
-              type,
-              route: to,
-              params: Object.entries(params).reduce(
-                (result, [key, value]) => ({
-                  ...result,
-                  [key]: compileParam(value, to.params),
-                }),
-                {},
-              ),
-            })
-            .then(
-              () => ({ [name]: true }),
-              (e) => {
-                console.log(`error during action ${name}`, e);
+            return context
+              .action(action, {
+                type,
+                route: to,
+                params: Object.entries(params).reduce(
+                  (result, [key, value]) => ({
+                    ...result,
+                    [key]: compileParam(value, to.params),
+                  }),
+                  {},
+                ),
+              })
+              .then(
+                () => ({ [name]: true }),
+                (e) => {
+                  console.log(`error during action ${name}`, e);
 
-                if (isRoutingError(e)) {
-                  e.meta = { path: to.path };
+                  if (isRoutingError(e)) {
+                    e.meta = { path: to.path };
 
-                  if (handleRoutingError) {
-                    return handleRoutingError(e, next, abort);
+                    if (handleRoutingError) {
+                      return handleRoutingError(e, next, abort);
+                    }
+                    throw e;
                   }
-                  throw e;
-                }
 
-                return { [name]: false };
-              },
-            );
-        }),
+                  return { [name]: false };
+                },
+              );
+          },
+        ),
     );
 
     return executionFlow(execution, next, abort);
