@@ -31,6 +31,7 @@ const httpRequestService: CraqService<HTTPRequestServicePayload> = (
     pathname,
     body,
     credentials,
+    headers,
   },
 ) => {
   const search = qs.stringify(query, { arrayFormat: 'brackets' });
@@ -48,6 +49,7 @@ const httpRequestService: CraqService<HTTPRequestServicePayload> = (
     credentials,
     headers: {
       'Content-Type': contentType,
+      ...headers,
     },
   }).then(handleResponse);
 };

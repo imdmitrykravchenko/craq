@@ -1,4 +1,3 @@
-
 export enum Method {
   Get = 'GET',
   Post = 'POST',
@@ -20,6 +19,7 @@ export type HTTPRequestServicePayload = {
   pathname: string;
   method?: Method;
   query?: { [key: string]: string | number | string[] | number[] };
+  headers?: { [key: string]: string };
   body?: any;
   host?: string;
   protocol?: string;
