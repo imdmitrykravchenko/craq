@@ -86,13 +86,24 @@ const renderBefore = ({
   state,
   options,
 }: RenderPayload) => {
-  const { title, description, canonical } = options.formatMeta(route, state);
+  const {
+    title,
+    description,
+    canonical,
+    lang = 'en',
+    og,
+  } = options.formatMeta(route, state);
 
   return `<!DOCTYPE html>
-    <html lang="en">
+    <html lang="${lang}">
       <head>
         <title>${title}</title>
         <meta name="description" content="${description}" />
+        ${
+          og
+            ? `<meta property="og:title" content=${og.title} /><meta property="og:description" content=${og.description} />`
+            : ''
+        }
         <link rel="icon" href="data:,">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
         ${styles.filter(placeFilter('head')).map(formatCSSResource).join('\n')}

@@ -8,7 +8,13 @@ export type RendererOptions = {
   formatMeta: (
     route: Route,
     state: object,
-  ) => { title: string; description: string; canonical: string };
+  ) => {
+    title: string;
+    description: string;
+    canonical: string;
+    lang?: string;
+    og?: { title: string; description: string };
+  };
 };
 export type Renderer<T = any> = (
   context: ServerContext<T, Context>,
