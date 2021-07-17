@@ -14,7 +14,16 @@ type Chunks = {
 
 const loadBundles = (bundles: Record<string, () => Promise<void>>) =>
   Promise.all(Object.values(bundles).map((bundle) => bundle()));
-const stingified = (value) => `JSON.parse('${JSON.stringify(value)}')`;
+const stingified = (value) =>
+  `JSON.parse('${JSON.stringify(value)
+    .replace(/\\n/g, '\\n')
+    .replace(/\\'/g, "\\'")
+    .replace(/\\"/g, '\\"')
+    .replace(/\\&/g, '\\&')
+    .replace(/\\r/g, '\\r')
+    .replace(/\\t/g, '\\t')
+    .replace(/\\b/g, '\\b')
+    .replace(/\\f/g, '\\f')}')`;
 const formatAttributes = (attributes) =>
   Object.entries(attributes)
     .filter(([_, value]) => value)
@@ -55,8 +64,10 @@ export type CSSResource = {
   place?: string;
 };
 
-const placeFilter = (value) => ({ place }: CSSResource | JSResource) =>
-  place === value;
+const placeFilter =
+  (value) =>
+  ({ place }: CSSResource | JSResource) =>
+    place === value;
 
 type RenderPayload = {
   route: Route;
@@ -104,15 +115,15 @@ const isJs = hasExt('js');
 const isCss = hasExt('css');
 
 const usefulChunks = ['vendor', 'bundle'];
-const getStaticReducer = (
-  assetsByChunkName,
-  pred,
-  additionalChunk = undefined,
-) => (set: Set<string>, chunkName) =>
-  [
-    ...(additionalChunk ? assetsByChunkName[additionalChunk].filter(pred) : []),
-    ...assetsByChunkName[chunkName].filter(pred),
-  ].reduce((result: Set<string>, link: string) => result.add(link), set);
+const getStaticReducer =
+  (assetsByChunkName, pred, additionalChunk = undefined) =>
+  (set: Set<string>, chunkName) =>
+    [
+      ...(additionalChunk
+        ? assetsByChunkName[additionalChunk].filter(pred)
+        : []),
+      ...assetsByChunkName[chunkName].filter(pred),
+    ].reduce((result: Set<string>, link: string) => result.add(link), set);
 const addAssetsPath = (path) => `/assets/${path}`;
 
 const getStats = (options: RendererOptions): Promise<Chunks> => {
