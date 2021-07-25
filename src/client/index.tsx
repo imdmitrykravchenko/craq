@@ -24,7 +24,7 @@ export const createCraqClient = (context: Context<any>, App, { bundles }) => {
     .use(() => ({ to }, next) => {
       const bundle = bundles[to.config.bundle];
 
-      return bundle().then(next);
+      return bundle().then(() => next());
     })
     .use(historyMiddleware())
     .use(
