@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import historyMiddleware from 'router6-history/src';
-import Context from '../core/Context';
 import { ForbiddenError, isRoutingError, NotFoundError } from 'router6/src';
+
+import Context from '../core/Context';
 import actionsMiddleware from '../core/actionsMiddleware';
 import createApp from '../core/createApp';
 import { ServerStats } from '../server/types';
@@ -31,7 +32,7 @@ export const createCraqClient = (context: Context<any>, App, { bundles }) => {
         context,
         {
           isServer: false,
-          executionFlow: (execution, next, abort) => {
+          executionFlow: (execution, next) => {
             if (context.router.isStarted()) {
               execution.catch((e) => {
                 if (isRoutingError(e)) {
@@ -40,7 +41,7 @@ export const createCraqClient = (context: Context<any>, App, { bundles }) => {
               });
               next();
             } else {
-              return execution.then(next, abort);
+              return execution.then(() => next(), next);
             }
           },
         },

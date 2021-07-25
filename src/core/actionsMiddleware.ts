@@ -1,4 +1,3 @@
-import qs from 'qs';
 import { isRoutingError, RouteMiddleware } from 'router6/src';
 
 import Context from './Context';
@@ -30,17 +29,16 @@ const actionsMiddleware =
       executionFlow,
     }: {
       isServer: boolean;
-      handleRoutingError?: (e, next, abort) => Promise<any>;
-      executionFlow: (
+      handleRoutingError?: (e, next) => Promise<any>;
+      executionFlow: <E extends Error>(
         execution: Promise<ActionExecutionResult[]>,
-        next: () => void,
-        abort: (e: Error) => void,
+        next: (error?: E) => void,
       ) => void;
     },
     stats: ActionExecutionResult = {},
   ): RouteMiddleware =>
   (router) =>
-  ({ to, type }, next, abort) => {
+  ({ to, type }, next) => {
     const routerStarted = router.isStarted();
     const execution = Promise.all<ActionExecutionResult>(
       (to.config.actions || [])
@@ -77,10 +75,8 @@ const actionsMiddleware =
                   console.log(`error during action ${name}`, e);
 
                   if (isRoutingError(e)) {
-                    e.meta = { path: to.path };
-
                     if (handleRoutingError) {
-                      return handleRoutingError(e, next, abort);
+                      return handleRoutingError(e, next);
                     }
                     throw e;
                   }
@@ -92,7 +88,7 @@ const actionsMiddleware =
         ),
     );
 
-    return executionFlow(execution, next, abort);
+    return executionFlow(execution, next);
   };
 
 export default actionsMiddleware;
