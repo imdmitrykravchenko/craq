@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import historyMiddleware from 'router6-history/src';
 import { ForbiddenError, isRoutingError, NotFoundError } from 'router6/src';
 
@@ -65,9 +65,9 @@ export const createCraqClient = (context: Context<any>, App, { bundles }) => {
       }
 
       return {
-        render: (node) =>
+        render: (node: Element | Document) =>
           runPromise.then(() =>
-            ReactDOM.hydrate(<CraqApp context={context} />, node),
+            ReactDOM.hydrateRoot(node, <CraqApp context={context} />),
           ),
       };
     },

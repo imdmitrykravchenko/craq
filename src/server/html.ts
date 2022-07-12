@@ -226,7 +226,7 @@ const html: Renderer = async (context, App, { bundles, options }) => {
   return render(
     context.ctx.res,
     renderBefore(renderPayload),
-    ReactDOMServer.renderToNodeStream(React.createElement(App, { context })),
+    ReactDOMServer.renderToPipeableStream(React.createElement(App, { context })),
     renderAfter(renderPayload),
   );
 };
