@@ -27,9 +27,6 @@ export type ServiceContext = {
   ) => Promise<ReturnType<T>>;
 };
 
-export type ServerServiceContext<T> = ServiceContext & {
-  ctx: T;
-};
 export type ActionContext<S> = ServiceContext &
   ComponentContext<S> & {
     router: Router6;
