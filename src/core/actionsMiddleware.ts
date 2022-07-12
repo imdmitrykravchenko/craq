@@ -24,10 +24,12 @@ const actionsMiddleware =
   <T extends Context<any>>(
     context: T,
     {
+      log = false,
       isServer,
       handleRoutingError,
       executionFlow,
     }: {
+      log?: boolean;
       isServer: boolean;
       handleRoutingError?: (e, next) => Promise<any>;
       executionFlow: <E extends Error>(
@@ -70,9 +72,20 @@ const actionsMiddleware =
                 ),
               })
               .then(
-                () => ({ [name]: true }),
+                () => {
+                  if (log) {
+                    console.log(`Actions middleware: action ${name} is done`);
+                  }
+
+                  return { [name]: true };
+                },
                 (e) => {
-                  console.log(`error during action ${name}`, e);
+                  if (log) {
+                    console.log(
+                      `Actions middleware: error during action ${name}`,
+                      e,
+                    );
+                  }
 
                   if (isRoutingError(e)) {
                     if (handleRoutingError) {
