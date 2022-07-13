@@ -84,11 +84,7 @@ describe('actionsMiddleware', () => {
 
     it('handle 404', async () => {
       const context = getTestContext(() => {
-        const err = new NotFoundError('NOPE');
-
-        err.meta = { route: '404' };
-
-        return Promise.reject(err);
+        return Promise.reject(new NotFoundError('NOPE', { route: '404' }));
       });
       const route = await context.router.start('/abc?a=1');
 
