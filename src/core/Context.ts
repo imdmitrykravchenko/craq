@@ -1,4 +1,3 @@
-import { Store } from '@reduxjs/toolkit';
 import Router6 from 'router6';
 
 import {
@@ -8,10 +7,11 @@ import {
   CraqService,
   ServiceContext,
   ActionContext,
+  Store,
 } from '../types';
 
-export default class Context<S> {
-  private store: Store<S>;
+export default class Context<S, A> {
+  private store: Store<S, A>;
 
   protected readonly actionContext: ActionContext<S>;
 
@@ -30,7 +30,7 @@ export default class Context<S> {
     router,
     registries,
   }: {
-    store: Store<S>;
+    store: Store<S, A>;
     router: Router6;
     registries: Registries<S>;
   }) {
@@ -41,9 +41,9 @@ export default class Context<S> {
     this.actionContext = {
       router,
       getState: () => store.getState(),
-      dispatch: (...args) => this.dispatch(...args),
-      action: (...args) => this.action(...args),
-      service: (...args) => this.service(...args),
+      dispatch: (action: A) => this.dispatch(action),
+      action: (action, payload) => this.action(action, payload),
+      service: (service, payload) => this.service(service, payload),
     };
     this.componentContext = {
       action: (...args) => this.action(...args),
@@ -53,7 +53,7 @@ export default class Context<S> {
     };
   }
 
-  dispatch(action) {
+  dispatch(action: A) {
     return Promise.resolve(this.store.dispatch(action));
   }
 

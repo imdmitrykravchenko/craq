@@ -21,7 +21,7 @@ const normalizeAction = (
     : actionNameOrNormailizedAction;
 
 const actionsMiddleware =
-  <T extends Context<any>>(
+  <T extends Context<any, any>>(
     context: T,
     {
       log = false,

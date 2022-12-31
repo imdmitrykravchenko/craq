@@ -8,6 +8,7 @@ import {
   Registries,
   ActionContext,
   NavigateCraqActionPayload,
+  Store,
 } from './types';
 import createRegistry from './core/registry';
 import actionsMiddleware from './core/actionsMiddleware';
@@ -16,6 +17,7 @@ import Context from './core/Context';
 export {
   createRegistry,
   actionsMiddleware,
+  Store,
   Context,
   Registry,
   NavigateCraqActionPayload,

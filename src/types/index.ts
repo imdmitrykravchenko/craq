@@ -1,10 +1,6 @@
-import { Action } from '@reduxjs/toolkit';
 import Router6, { Route } from 'router6';
 
-export type CraqAction<S = {}, P = {}> = (
-  context: ActionContext<S>,
-  payload?: P,
-) => any;
+export type CraqAction<S, P> = (context: ActionContext<S>, payload?: P) => any;
 
 export type NavigateCraqActionPayload = {
   route: Route;
@@ -12,12 +8,12 @@ export type NavigateCraqActionPayload = {
   params: Record<string, string>;
 };
 
-export type NavigateCraqAction<S = {}> = CraqAction<
+export type NavigateCraqAction<S = any> = CraqAction<
   S,
   NavigateCraqActionPayload
 >;
 
-export type CraqService<P = {}> = (context: ServiceContext, payload?: P) => any;
+export type CraqService<P> = (context: ServiceContext, payload?: P) => any;
 
 export type ComponentContext<S> = {
   action: <P, T extends CraqAction<S, P>>(
@@ -33,11 +29,15 @@ export type ServiceContext = {
   ) => Promise<ReturnType<T>>;
 };
 
-export type ActionContext<S> = ServiceContext &
-  ComponentContext<S> & {
+export type Store<T, A> = {
+  getState: () => T;
+  dispatch: (action: A) => Promise<void>;
+};
+
+export type ActionContext<S, A = any> = ServiceContext &
+  ComponentContext<S> &
+  Store<S, A> & {
     router: Router6;
-    getState: () => S;
-    dispatch: (action: Action<any>) => Promise<void>;
   };
 
 export type Registry<T> = {

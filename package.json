@@ -1,6 +1,6 @@
 {
   "name": "craq",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -11,9 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "router6": "0.0.1"
-  },
-  "peerDependencies": {
-    "@reduxjs/toolkit": "^1.9.1"
   },
   "devDependencies": {
     "@types/eslint": "^7.2.6",
