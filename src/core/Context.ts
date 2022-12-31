@@ -1,5 +1,5 @@
-import { Store } from 'redux';
-import Router6 from 'router6/src';
+import { Store } from '@reduxjs/toolkit';
+import Router6 from 'router6';
 
 import {
   CraqAction,
@@ -13,7 +13,7 @@ import {
 export default class Context<S> {
   private store: Store<S>;
 
-  private readonly actionContext: ActionContext<S>;
+  protected readonly actionContext: ActionContext<S>;
 
   protected readonly serviceContext: ServiceContext;
 

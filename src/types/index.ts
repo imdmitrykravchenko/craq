@@ -1,14 +1,20 @@
-import { Action } from 'redux-act';
-import Router6, { Route } from 'router6/src';
+import { Action } from '@reduxjs/toolkit';
+import Router6, { Route } from 'router6';
 
 export type CraqAction<S = {}, P = {}> = (
   context: ActionContext<S>,
   payload?: P,
 ) => any;
 
+export type NavigateCraqActionPayload = {
+  route: Route;
+  type: string;
+  params: Record<string, string>;
+};
+
 export type NavigateCraqAction<S = {}> = CraqAction<
   S,
-  { route: Route; type: string; params: Record<string, string> }
+  NavigateCraqActionPayload
 >;
 
 export type CraqService<P = {}> = (context: ServiceContext, payload?: P) => any;

@@ -1,4 +1,4 @@
-import { isRoutingError, RouteMiddleware } from 'router6/src';
+import { isRoutingError, RouteMiddleware } from 'router6';
 
 import Context from './Context';
 

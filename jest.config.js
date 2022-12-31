@@ -1,9 +1,9 @@
 module.exports = {
-  transform: { '\\.ts$': ['ts-jest'], '\\.js?$': 'babel-jest' },
+  transform: { '\\.ts$': ['ts-jest'] },
   globals: {
     'ts-jest': {
       diagnostics: false,
     },
   },
-  transformIgnorePatterns: ['/node_modules/(?!router6)'],
+  transformIgnorePatterns: ['/node_modules/'],
 };

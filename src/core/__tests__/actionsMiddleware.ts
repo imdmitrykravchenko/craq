@@ -1,7 +1,8 @@
-import Router6, { NotFoundError } from 'router6/src';
+import Router6, { NotFoundError } from 'router6';
 import actionsMiddleware from '../actionsMiddleware';
 import Context from '../Context';
 import createRegistry from '../registry';
+import { NavigateCraqAction } from '../../types';
 
 describe('actionsMiddleware', () => {
   describe('server side', () => {
@@ -23,7 +24,7 @@ describe('actionsMiddleware', () => {
           },
         },
       ]);
-      const actions = createRegistry();
+      const actions = createRegistry<NavigateCraqAction>();
 
       actions.register('404/action', () => {});
       actions.register('notThrowing/action', () => {});
