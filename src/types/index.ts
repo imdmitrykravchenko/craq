@@ -32,6 +32,7 @@ export type ServiceContext = {
 export type Store<T, A> = {
   getState: () => T;
   dispatch: (action: A) => Promise<void>;
+  subscribe: (listener: () => void) => () => void;
 };
 
 export type ActionContext<S, A = any> = ServiceContext &
