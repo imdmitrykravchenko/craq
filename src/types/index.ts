@@ -1,6 +1,9 @@
 import Router6, { Route } from 'router6';
 
-export type CraqAction<S, P> = (context: ActionContext<S>, payload?: P) => any;
+export type CraqAction<S = any, P = any> = (
+  context: ActionContext<S>,
+  payload?: P,
+) => any;
 
 export type NavigateCraqActionPayload = {
   route: Route;
