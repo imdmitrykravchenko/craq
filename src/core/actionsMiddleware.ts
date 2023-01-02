@@ -14,11 +14,11 @@ type NormalizedAction = {
 };
 
 const normalizeAction = (
-  actionNameOrNormailizedAction: string | NormalizedAction,
+  actionNameOrNormalizedAction: string | NormalizedAction,
 ): NormalizedAction =>
-  typeof actionNameOrNormailizedAction === 'string'
-    ? { name: actionNameOrNormailizedAction, params: {}, options: {} }
-    : actionNameOrNormailizedAction;
+  typeof actionNameOrNormalizedAction === 'string'
+    ? { name: actionNameOrNormalizedAction, params: {}, options: {} }
+    : actionNameOrNormalizedAction;
 
 const actionsMiddleware =
   <T extends Context<any, any>>(
