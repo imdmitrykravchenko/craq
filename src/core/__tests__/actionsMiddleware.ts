@@ -1,4 +1,4 @@
-import Router6, { NotFoundError } from 'router6';
+import Router6 from 'router6';
 import actionsMiddleware from '../actionsMiddleware';
 import Context from '../Context';
 import createRegistry from '../registry';
@@ -6,13 +6,20 @@ import { NavigateCraqAction } from '../../types';
 
 describe('actionsMiddleware', () => {
   describe('server side', () => {
-    const getTestContext = (throwingAction) => {
+    const getTestContext = (throwingAction, shouldThrow) => {
       const router = new Router6([
         {
           path: '/abc',
           name: 'name',
           config: {
             actions: ['notThrowing/action', 'throwing/action'],
+          },
+        },
+        {
+          path: '/def',
+          name: 'def',
+          config: {
+            actions: [],
           },
         },
         {
@@ -38,40 +45,44 @@ describe('actionsMiddleware', () => {
 
       router.use(
         actionsMiddleware(context, {
-          isServer: true,
-          handleRoutingError: (e, next) => Promise.reject(next(e)),
-          executionFlow: (execution, next) =>
-            execution
-              .then(
-                (results) => {
-                  context.stats.actions = results.reduce(
-                    (result, action) => ({ ...result, ...action }),
-                    {},
-                  );
-                },
-                (error) => {
-                  context.stats.error = error;
-
-                  return error;
-                },
-              )
-              .then(next),
+          onError: (error, { name }) => {
+            context.stats.error = error;
+            context.stats.actions[name] = false;
+            if (shouldThrow) throw error;
+          },
+          onSuccess: ({ name }) => {
+            context.stats.actions[name] = true;
+          },
         }),
       );
 
       return context;
     };
 
+    it('throw any error', () => {
+      const context = getTestContext(
+        () => Promise.reject(new Error('NOPE')),
+        true,
+      );
+
+      expect(() => context.router.start('/abc?a=1')).rejects.toEqual(
+        new Error('NOPE'),
+      );
+    });
+
     it('handle any error', async () => {
-      const context = getTestContext(() => {
-        return Promise.reject(new Error('NOPE'));
-      });
+      const context = getTestContext(
+        () => Promise.reject(new Error('NOPE')),
+        false,
+      );
+
       const route = await context.router.start('/abc?a=1');
 
-      expect(context.stats.actions['throwing/action']).toBe(false);
+      expect(context.stats.error).toEqual(new Error('NOPE'));
+      expect(context.stats.actions).toBeDefined();
+      expect(context.stats.actions['throwing/action']).toBeFalsy();
       expect(context.stats.actions['notThrowing/action']).toBe(true);
       expect(route).toMatchObject({
-        error: null,
         state: undefined,
         query: { a: '1' },
         params: {},
@@ -79,25 +90,6 @@ describe('actionsMiddleware', () => {
           actions: ['notThrowing/action', 'throwing/action'],
         },
         name: 'name',
-        path: '/abc',
-      });
-    });
-
-    it('handle 404', async () => {
-      const context = getTestContext(() => {
-        return Promise.reject(new NotFoundError('NOPE', { route: '404' }));
-      });
-      const route = await context.router.start('/abc?a=1');
-
-      expect(context.stats.actions['404/action']).toBe(true);
-
-      expect(route).toMatchObject({
-        error: expect.any(Object),
-        state: undefined,
-        query: { a: '1' },
-        params: {},
-        config: { error: true, actions: ['404/action'] },
-        name: '404',
         path: '/abc',
       });
     });
