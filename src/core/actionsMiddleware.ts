@@ -6,21 +6,28 @@ type ActionExecutionResult = { [actionName: string]: boolean };
 const compileParam = (param: string, params) =>
   param.replace(/:(\w+)/g, (_, name) => params[name]);
 
+type ActionOptions = {
+  serverOnly?: boolean;
+  clientOnly?: boolean;
+};
+
 type NormalizedAction = {
   name: string;
-  params: object;
+  params: Record<string, string>;
+  options: ActionOptions;
 };
 
 const normalizeAction = (
   actionNameOrNormalizedAction: string | NormalizedAction,
 ): NormalizedAction =>
   typeof actionNameOrNormalizedAction === 'string'
-    ? { name: actionNameOrNormalizedAction, params: {} }
+    ? { name: actionNameOrNormalizedAction, params: {}, options: {} }
     : actionNameOrNormalizedAction;
 
 type CallbackPayload = {
   name: string;
   params: Record<string, string>;
+  options?: Partial<ActionOptions>;
 };
 
 const noop = () => {};
