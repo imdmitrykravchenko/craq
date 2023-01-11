@@ -45,7 +45,7 @@ const actionsMiddleware =
       onSuccess?: (payload: CallbackPayload) => void | Promise<any>;
     },
   ): RouteMiddleware =>
-  (router) =>
+  () =>
   ({ to, type }, next) => {
     context.stats.actions = {};
 

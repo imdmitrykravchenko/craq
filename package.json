@@ -1,6 +1,6 @@
 {
   "name": "craq",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "Dmitry Kravchenko",
   "license": "ISC",
   "dependencies": {
-    "router6": "0.0.2"
+    "router6": "0.0.3"
   },
   "devDependencies": {
     "@types/eslint": "^7.2.6",
