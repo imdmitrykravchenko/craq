@@ -65,7 +65,7 @@ describe('actionsMiddleware', () => {
         true,
       );
 
-      expect(() => context.router.start('/abc?a=1', {})).rejects.toEqual(
+      expect(() => context.router.navigateToPath('/abc?a=1', {})).rejects.toEqual(
         new Error('NOPE'),
       );
     });
@@ -76,7 +76,7 @@ describe('actionsMiddleware', () => {
         false,
       );
 
-      const route = await context.router.start('/abc?a=1', {});
+      const route = await context.router.navigateToPath('/abc?a=1', {});
 
       expect(context.stats.error).toEqual(new Error('NOPE'));
       expect(context.stats.actions).toBeDefined();
