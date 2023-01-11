@@ -54,21 +54,21 @@ export default class Context<S, A> {
   }
 
   dispatch(action: A) {
-    return Promise.resolve(this.store.dispatch(action));
+    return Promise.resolve().then(() => this.store.dispatch(action));
   }
 
   action<P, T extends CraqAction<S, P>>(
     action: T,
     payload?: P,
   ): Promise<ReturnType<T>> {
-    return Promise.resolve(action(this.actionContext, payload));
+    return Promise.resolve().then(() => action(this.actionContext, payload));
   }
 
   service<P, T extends CraqService<P>>(
     service: T,
     payload?: P,
   ): Promise<ReturnType<T>> {
-    return Promise.resolve(service(this.serviceContext, payload));
+    return Promise.resolve().then(() => service(this.serviceContext, payload));
   }
 
   getStore() {
