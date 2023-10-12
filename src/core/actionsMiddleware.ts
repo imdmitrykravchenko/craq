@@ -79,6 +79,6 @@ const actionsMiddleware =
               (err) => onError(err, callbacksPayload),
             );
         }),
-    ).then(() => next());
+    ).then(() => next(), next);
   };
 export default actionsMiddleware;
