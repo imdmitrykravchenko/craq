@@ -41,7 +41,7 @@ export type Store<T, A> = {
 export type ActionContext<S, A = any> = ServiceContext &
   ComponentContext<S> &
   Pick<Store<S, A>, 'getState' | 'dispatch'> & {
-    router: Router6;
+    getRouter: () => Router6;
   };
 
 export type Registry<T> = {

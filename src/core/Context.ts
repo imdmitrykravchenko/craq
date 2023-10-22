@@ -31,7 +31,7 @@ export default class Context<S, A> {
     registries,
   }: {
     store: Store<S, A>;
-    router: Router6;
+    router?: Router6;
     registries: Registries<S>;
   }) {
     this.registries = registries;
@@ -39,7 +39,7 @@ export default class Context<S, A> {
     this.store = store;
     this.router = router;
     this.actionContext = {
-      router,
+      getRouter: () => this.router,
       getState: () => store.getState(),
       dispatch: (action: A) => this.dispatch(action),
       action: (action, payload) => this.action(action, payload),
